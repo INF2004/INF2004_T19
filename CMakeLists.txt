@@ -1,48 +1,25 @@
-if (EXISTS ${PICO_LWIP_CONTRIB_PATH}/apps/ping/ping.c)
-#     add_executable(picow_freertos_ping_nosys
-#             picow_freertos_ping.c
-#             ${PICO_LWIP_CONTRIB_PATH}/apps/ping/ping.c
-#             )
-#     target_compile_definitions(picow_freertos_ping_nosys PRIVATE
-#             WIFI_SSID=\"${WIFI_SSID}\"
-#             WIFI_PASSWORD=\"${WIFI_PASSWORD}\"
-#             )
-#     target_include_directories(picow_freertos_ping_nosys PRIVATE
-#             ${CMAKE_CURRENT_LIST_DIR}
-#             ${CMAKE_CURRENT_LIST_DIR}/../.. # for our common lwipopts
-#             ${PICO_LWIP_CONTRIB_PATH}/apps/ping
-#             )
-#     target_link_libraries(picow_freertos_ping_nosys
-#             pico_cyw43_arch_lwip_threadsafe_background
-#             pico_stdlib
-#             pico_lwip_iperf
-#             FreeRTOS-Kernel-Heap4 # FreeRTOS kernel and dynamic heap
-#             )
-#     pico_add_extra_outputs(picow_freertos_ping_nosys)
 
-    add_executable(maze
-            maze.c
-            ${PICO_LWIP_CONTRIB_PATH}/apps/ping/ping.c
-            )
-    target_compile_definitions(maze PRIVATE
-            WIFI_SSID=\"${WIFI_SSID}\"
-            WIFI_PASSWORD=\"${WIFI_PASSWORD}\"
-            NO_SYS=0            # don't want NO_SYS (generally this would be in your lwipopts.h)
-            LWIP_SOCKET=1       # we need the socket API (generally this would be in your lwipopts.h)
-            PING_USE_SOCKETS=1
-            )
-    target_include_directories(maze PRIVATE
-            ${CMAKE_CURRENT_LIST_DIR}
-            ${CMAKE_CURRENT_LIST_DIR}/../.. # for our common lwipopts
-            ${PICO_LWIP_CONTRIB_PATH}/apps/ping
-            )
-    target_link_libraries(maze
-            hardware_adc
-            pico_cyw43_arch_lwip_sys_freertos
-            pico_stdlib
-            pico_lwip_iperf
-            FreeRTOS-Kernel-Heap4 # FreeRTOS kernel and dynamic heap
-            )
-    pico_add_extra_outputs(maze)
-    pico_enable_stdio_usb(maze 1)
-endif()
+message("Running makefsdata python script")
+execute_process(COMMAND
+    py makefsdata.py
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+)
+
+add_subdirectory(driver)
+
+add_executable(maze_sys
+        maze.c
+)
+target_compile_definitions(maze_sys PRIVATE
+)
+target_include_directories(maze_sys PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}
+)
+target_link_libraries(maze_sys
+    PRIVATE
+        pico_stdlib
+        FreeRTOS-Kernel-Heap4 # FreeRTOS kernel and dynamic heap
+        UIComponent
+)
+pico_add_extra_outputs(maze_sys)
+pico_enable_stdio_usb(maze_sys 1)
