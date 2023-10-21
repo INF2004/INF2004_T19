@@ -1,9 +1,5 @@
-
-message("Running makefsdata python script")
-execute_process(COMMAND
-    py makefsdata.py
-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-)
+#  it's a workaround but pls dont run python in cmake.
+#  run makefsdata.py separately in the main directory instead.
 
 add_subdirectory(driver)
 

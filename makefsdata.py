@@ -80,13 +80,15 @@ for file in files:
     #finally, dump raw hex data from files
     with open(file, 'rb') as f:
         count = 0
-        while(byte := f.read(1)):
+        byte = f.read(1)
+        while byte:
             byte = binascii.hexlify(byte)
             output.write("0x{}, ".format(byte.decode()))
             count = count + 1
-            if(count == 10):
+            if count == 10:
                 output.write("\n\t")
                 count = 0
+            byte = f.read(1)
         output.write("};\n\n")
 
     filenames.append(file[1:])
@@ -104,3 +106,5 @@ for i in range(len(filenames)):
 
 output.write("\n#define FS_ROOT file{}\n".format(varnames[-1])) 
 output.write("#define FS_NUMFILES {}\n".format(len(filenames)))
+output.close()
+print("makefsdata ended")
