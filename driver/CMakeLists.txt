@@ -5,7 +5,7 @@
 # Add the subdirectories for specific drivers/components
 # add_subdirectory(encoder)
 # add_subdirectory(irline)
-# add_subdirectory(magnetometer)
+add_subdirectory(magnetometer)
 # add_subdirectory(motor)
 add_subdirectory(ui)
 # add_subdirectory(ultrasonic)
