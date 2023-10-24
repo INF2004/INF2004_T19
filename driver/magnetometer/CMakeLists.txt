@@ -17,6 +17,8 @@ target_include_directories(magnetometer PRIVATE
 target_link_libraries(magnetometer
   PRIVATE
     hardware_adc
+    hardware_i2c
     pico_stdlib
+    m # math lib
     FreeRTOS-Kernel-Heap4 # FreeRTOS kernel and dynamic heap
 )
