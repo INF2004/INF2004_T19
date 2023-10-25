@@ -1,12 +1,21 @@
-add_executable(motor
-        motor.c
-        )
+# CMakeLists.txt in the motor directory
 
-# pull in common dependencies and additional pwm hardware support
-target_link_libraries(motor pico_stdlib hardware_pwm)
+# Define the target for the motor component
+add_library(motor motor.c motor.h)
 
-# create map/bin/hex file etc.
-pico_add_extra_outputs(motor)
+target_compile_definitions(motor PRIVATE
+)
 
-# add url via pico_set_program_url
-example_auto_set_url(motor)
+target_include_directories(motor PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}/../../ # for our FreeRTOSConfig.h
+    ${CMAKE_CURRENT_LIST_DIR}/../../../.. # for our common lwipopts
+)
+
+# Set any additional properties or dependencies for the motor component
+target_link_libraries(motor
+  PRIVATE
+    hardware_pwm
+    pico_stdlib
+    FreeRTOS-Kernel-Heap4 # FreeRTOS kernel and dynamic heap
+)
