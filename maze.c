@@ -5,6 +5,7 @@
 
 #include "driver/ui/ui.h"
 #include "driver/magnetometer/magnetometer.h"
+#include "driver/motor/motor.h"
 
 #ifndef RUN_FREERTOS_ON_CORE
 #define RUN_FREERTOS_ON_CORE 0
@@ -18,8 +19,10 @@ void vLaunch(void)
 {
     TaskHandle_t uiTask;
     TaskHandle_t magnetometerTask;
+    TaskHandle_t motorTask;
 
     xTaskCreate(ui_task, "TestUiThread", configMINIMAL_STACK_SIZE, NULL, TEST_TASK_PRIORITY, &uiTask);
+    xTaskCreate(motor_task, "TestMotorThread", configMINIMAL_STACK_SIZE, NULL, 9, &motorTask);
     xTaskCreate(magnetometer_task, "TestMagnetometerThread", configMINIMAL_STACK_SIZE, NULL, 8, &magnetometerTask);
 
 #if NO_SYS && configUSE_CORE_AFFINITY && configNUM_CORES > 1
