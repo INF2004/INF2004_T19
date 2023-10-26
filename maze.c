@@ -22,8 +22,8 @@ void vLaunch(void)
     TaskHandle_t motorTask;
 
     xTaskCreate(ui_task, "TestUiThread", configMINIMAL_STACK_SIZE, NULL, TEST_TASK_PRIORITY, &uiTask);
+    xTaskCreate(motor_task, "TestMotorThread", configMINIMAL_STACK_SIZE, NULL, 9, &motorTask);
     xTaskCreate(magnetometer_task, "TestMagnetometerThread", configMINIMAL_STACK_SIZE, NULL, 8, &magnetometerTask);
-    xTaskCreate(motor_task, "TestMotorThread", configMINIMAL_STACK_SIZE, NULL, 8, &motorTask);
 
 #if NO_SYS && configUSE_CORE_AFFINITY && configNUM_CORES > 1
     // we must bind the main task to one core (well at least while the init is called)
