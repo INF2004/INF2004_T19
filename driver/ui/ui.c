@@ -10,6 +10,7 @@
 #include "task.h"
 
 #include "ui.h"
+#include "driver/magnetometer/magnetometer.h"
 
 
 // CGI handler which is run when a request for /led.cgi is detected
@@ -43,7 +44,7 @@ void cgi_init(void)
 
 
 // SSI tags - tag length limited to 8 bytes by default
-const char *ssi_tags[] = {"volt", "temp", "led"};
+const char *ssi_tags[] = {"volt", "temp", "led", "comp"};
 
 u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
 {
@@ -74,6 +75,13 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen)
         {
             printed = snprintf(pcInsert, iInsertLen, "OFF");
         }
+    }
+    break;
+    case 3: // compass
+    {
+        const float compass_reading = compass_read_degrees();
+        printf("compass reading on ui:: %f\n", compass_reading);
+        printed = snprintf(pcInsert, iInsertLen, "%f", compass_reading);
     }
     break;
     default:
@@ -108,7 +116,7 @@ void ui_task(__unused void *params)
 
     printf("Connecting to Wi-Fi...\n");
 
-    if (cyw43_arch_wifi_connect_timeout_ms(WIFI_SSID, WIFI_PASSWORD, CYW43_AUTH_WPA2_AES_PSK, 30000))
+    if (cyw43_arch_wifi_connect_timeout_ms("Pixel_8072", "adafbb6699", CYW43_AUTH_WPA2_AES_PSK, 30000))
     {
         printf("failed to connect.\n");
     }
@@ -128,7 +136,7 @@ void ui_task(__unused void *params)
 
     while (true)
     {
-        vTaskDelay(1000);
+        // vTaskDelay(1000);
     }
 
     cyw43_arch_deinit();

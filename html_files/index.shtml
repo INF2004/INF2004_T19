@@ -9,6 +9,7 @@
         <p>Voltage: <!--#volt--></p>
         <p>Temp: <!--#temp--> C</p>
         <p>LED is: <!--#led--></p>
+        <p>Compass is: <!--#comp--></p>
         <br>
         <h2>This bit is CGI:</h2>
         <a href="/led.cgi?led=1"><button>LED ON</button></a>
