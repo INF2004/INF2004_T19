@@ -12,20 +12,15 @@
 #define MOTOR_LEFT_FORWARD 16   
 #define MOTOR_RIGHT_FORWARD 17  
 
+uint slice_num_left;
+uint slice_num_right;
+
 void motor_task(__unused void *params) 
 {
     motorSetup();
     while (1) {
         // Move forward at full speed for 2 seconds
         moveForward();
-        sleep_ms(2000);
-
-        // Stop for 1 second
-        stopMotors();
-        sleep_ms(1000);
-
-        // Move backward at half speed for 2 seconds
-        moveBackward();
         sleep_ms(2000);
 
         // Stop for 1 second
@@ -56,8 +51,8 @@ void motorSetup() {
     gpio_set_function(MOTOR_RIGHT_FORWARD, GPIO_FUNC_PWM);
 
     // helper function to get the pwm slice
-    uint slice_num_left = pwm_gpio_to_slice_num(MOTOR_LEFT_FORWARD);
-    uint slice_num_right = pwm_gpio_to_slice_num(MOTOR_RIGHT_FORWARD);
+    slice_num_left = pwm_gpio_to_slice_num(MOTOR_LEFT_FORWARD);
+    slice_num_right = pwm_gpio_to_slice_num(MOTOR_RIGHT_FORWARD);
 
     // set the clock division
     pwm_set_clkdiv(slice_num_left, CLOCK_DIVIDER);
@@ -77,27 +72,22 @@ void motorSetup() {
 }
 
 void moveForward() {
-    gpio_put(MOTOR_LEFT_FORWARD, 1);
-    gpio_put(MOTOR_RIGHT_FORWARD, 1);
-}
-
-void moveBackward() {
-    gpio_put(MOTOR_LEFT_FORWARD, 0);
-    gpio_put(MOTOR_RIGHT_FORWARD, 0);
+    pwm_set_chan_level(slice_num_left, PWM_CHAN_A, PWM_WRAP/2);
+    pwm_set_chan_level(slice_num_right, PWM_CHAN_B, PWM_WRAP/2);
 }
 
 void turnLeft() {
-    gpio_put(MOTOR_LEFT_FORWARD, 1);
-    gpio_put(MOTOR_RIGHT_FORWARD, 0);
+    pwm_set_chan_level(slice_num_left, PWM_CHAN_A, PWM_WRAP/2);
+    pwm_set_chan_level(slice_num_right, PWM_CHAN_B, 0);
 }
 
 void turnRight() {
-    gpio_put(MOTOR_LEFT_FORWARD, 0);
-    gpio_put(MOTOR_RIGHT_FORWARD, 1);
+    pwm_set_chan_level(slice_num_left, PWM_CHAN_A, 0);
+    pwm_set_chan_level(slice_num_right, PWM_CHAN_B, PWM_WRAP/2);
 }
 
 void stopMotors() {
-    gpio_put(MOTOR_LEFT_FORWARD, 0);
-    gpio_put(MOTOR_RIGHT_FORWARD, 0);
+    pwm_set_chan_level(slice_num_left, PWM_CHAN_A, 0);
+    pwm_set_chan_level(slice_num_right, PWM_CHAN_B, 0);
 }
 
