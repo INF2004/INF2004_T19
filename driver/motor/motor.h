@@ -7,4 +7,3 @@ void moveBackward(void);
 void turnLeft(void);
 void turnRight(void);
 void stopMotors(void);
-void setMotorSpeed(int speed);
