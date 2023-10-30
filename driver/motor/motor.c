@@ -6,15 +6,11 @@
 
 #include "motor.h"
 
-#define PWM_PIN_LEFT_ENABLED 18 
-#define PWM_PIN_RIGHT_ENABLED 13 
-#define PWM_FREQ 5000 
-#define PWM_RANGE 255
+#define CLOCK_DIVIDER 250
+#define PWM_WRAP 25000
 
 #define MOTOR_LEFT_FORWARD 16   
-#define MOTOR_LEFT_BACKWARD 17 
-#define MOTOR_RIGHT_FORWARD 14  
-#define MOTOR_RIGHT_BACKWARD 15
+#define MOTOR_RIGHT_FORWARD 17  
 
 void motor_task(__unused void *params) 
 {
@@ -22,7 +18,6 @@ void motor_task(__unused void *params)
     while (1) {
         // Move forward at full speed for 2 seconds
         moveForward();
-        setMotorSpeed(PWM_RANGE);
         sleep_ms(2000);
 
         // Stop for 1 second
@@ -31,7 +26,6 @@ void motor_task(__unused void *params)
 
         // Move backward at half speed for 2 seconds
         moveBackward();
-        setMotorSpeed(1);
         sleep_ms(2000);
 
         // Stop for 1 second
@@ -40,7 +34,6 @@ void motor_task(__unused void *params)
 
         // Turn left
         turnLeft();
-        setMotorSpeed(PWM_RANGE);
         sleep_ms(2000);
 
         // Stop for 1 second
@@ -49,7 +42,6 @@ void motor_task(__unused void *params)
 
         // Turn right
         turnRight();
-        setMotorSpeed(PWM_RANGE);
         sleep_ms(2000);
 
         // Stop for 1 second
@@ -59,71 +51,53 @@ void motor_task(__unused void *params)
 }
 
 void motorSetup() {
-    // Tell GPIO 18 and 13 they are allocatd to the PWN
-    gpio_set_function(PWM_PIN_LEFT_ENABLED, GPIO_OUT);
-    gpio_set_function(PWM_PIN_RIGHT_ENABLED, GPIO_OUT);
-    /* LEFT MOTOR CONFIG
-    GPIO 16 */
-    gpio_init(MOTOR_LEFT_FORWARD);
-    gpio_set_dir(MOTOR_LEFT_FORWARD, GPIO_OUT);
-    // GPIO 17
-    gpio_init(MOTOR_LEFT_BACKWARD);
-    gpio_set_dir(MOTOR_LEFT_BACKWARD, GPIO_OUT);
-    // GPIO 18
-    gpio_init(PWM_PIN_LEFT_ENABLED);
-    gpio_set_dir(PWM_PIN_LEFT_ENABLED, GPIO_OUT);
+    // configure PWM slice and set it running
+    gpio_set_function(MOTOR_LEFT_FORWARD, GPIO_FUNC_PWM);
+    gpio_set_function(MOTOR_RIGHT_FORWARD, GPIO_FUNC_PWM);
 
-    /* RIGHT MOTOR CONFIG
-    GPIO 14*/
-    gpio_init(MOTOR_RIGHT_FORWARD);
-    gpio_set_dir(MOTOR_RIGHT_FORWARD, GPIO_OUT);
+    // helper function to get the pwm slice
+    uint slice_num_left = pwm_gpio_to_slice_num(MOTOR_LEFT_FORWARD);
+    uint slice_num_right = pwm_gpio_to_slice_num(MOTOR_RIGHT_FORWARD);
 
-    // GPIO 15
-    gpio_init(MOTOR_RIGHT_BACKWARD);
-    gpio_set_dir(MOTOR_RIGHT_BACKWARD, GPIO_OUT);
+    // set the clock division
+    pwm_set_clkdiv(slice_num_left, CLOCK_DIVIDER);
+    pwm_set_clkdiv(slice_num_right, CLOCK_DIVIDER);
 
-    gpio_put(PWM_PIN_LEFT_ENABLED, 1);
-    gpio_put(PWM_PIN_RIGHT_ENABLED, 1);
-    pwm_set_enabled(MOTOR_LEFT_FORWARD, true);
-    pwm_set_enabled(MOTOR_RIGHT_FORWARD, true);
+    // set the pwm top to reset
+    pwm_set_wrap(slice_num_left, PWM_WRAP);
+    pwm_set_wrap(slice_num_right, PWM_WRAP);
+
+    // set the duty cycle 50%, we're using GP2 so it's channel a
+    pwm_set_chan_level(slice_num_left, PWM_CHAN_A, PWM_WRAP/2);
+    pwm_set_chan_level(slice_num_right, PWM_CHAN_B, PWM_WRAP/2);
+
+    // enable pwm
+    pwm_set_enabled(slice_num_left, true);
+    pwm_set_enabled(slice_num_right, true);
 }
 
 void moveForward() {
     gpio_put(MOTOR_LEFT_FORWARD, 1);
-    gpio_put(MOTOR_LEFT_BACKWARD, 0);
     gpio_put(MOTOR_RIGHT_FORWARD, 1);
-    gpio_put(MOTOR_RIGHT_BACKWARD, 0);
 }
 
 void moveBackward() {
     gpio_put(MOTOR_LEFT_FORWARD, 0);
-    gpio_put(MOTOR_LEFT_BACKWARD, 1);
     gpio_put(MOTOR_RIGHT_FORWARD, 0);
-    gpio_put(MOTOR_RIGHT_BACKWARD, 1);
 }
 
 void turnLeft() {
-    gpio_put(MOTOR_LEFT_FORWARD, 0);
-    gpio_put(MOTOR_LEFT_BACKWARD, 1);
-    gpio_put(MOTOR_RIGHT_FORWARD, 1);
-    gpio_put(MOTOR_RIGHT_BACKWARD, 0);
+    gpio_put(MOTOR_LEFT_FORWARD, 1);
+    gpio_put(MOTOR_RIGHT_FORWARD, 0);
 }
 
 void turnRight() {
-    gpio_put(MOTOR_LEFT_FORWARD, 1);
-    gpio_put(MOTOR_LEFT_BACKWARD, 0);
-    gpio_put(MOTOR_RIGHT_FORWARD, 0);
-    gpio_put(MOTOR_RIGHT_BACKWARD, 1);
+    gpio_put(MOTOR_LEFT_FORWARD, 0);
+    gpio_put(MOTOR_RIGHT_FORWARD, 1);
 }
 
 void stopMotors() {
     gpio_put(MOTOR_LEFT_FORWARD, 0);
-    gpio_put(MOTOR_LEFT_BACKWARD, 0);
     gpio_put(MOTOR_RIGHT_FORWARD, 0);
-    gpio_put(MOTOR_RIGHT_BACKWARD, 0);
 }
 
-void setMotorSpeed(int speed) {
-    pwm_set_gpio_level(PWM_PIN_LEFT_ENABLED, speed);
-    pwm_set_gpio_level(PWM_PIN_RIGHT_ENABLED, speed);
-}
