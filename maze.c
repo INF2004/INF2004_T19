@@ -6,6 +6,7 @@
 #include "driver/ui/ui.h"
 #include "driver/magnetometer/magnetometer.h"
 #include "driver/motor/motor.h"
+#include "driver/ultrasonic/ultrasonic.h"
 
 #ifndef RUN_FREERTOS_ON_CORE
 #define RUN_FREERTOS_ON_CORE 0
@@ -20,10 +21,12 @@ void vLaunch(void)
     TaskHandle_t uiTask;
     TaskHandle_t magnetometerTask;
     TaskHandle_t motorTask;
+    TaskHandle_t ultrasonicTask;
 
     xTaskCreate(ui_task, "TestUiThread", configMINIMAL_STACK_SIZE, NULL, TEST_TASK_PRIORITY, &uiTask);
     xTaskCreate(motor_task, "TestMotorThread", configMINIMAL_STACK_SIZE, NULL, 9, &motorTask);
     xTaskCreate(magnetometer_task, "TestMagnetometerThread", configMINIMAL_STACK_SIZE, NULL, 8, &magnetometerTask);
+    xTaskCreate(ultrasonic_task, "TestUltrasonicThread", configMINIMAL_STACK_SIZE, NULL, 8, &ultrasonicTask);
 
 #if NO_SYS && configUSE_CORE_AFFINITY && configNUM_CORES > 1
     // we must bind the main task to one core (well at least while the init is called)

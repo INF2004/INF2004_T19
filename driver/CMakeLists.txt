@@ -8,7 +8,7 @@
 add_subdirectory(magnetometer)
 add_subdirectory(motor)
 add_subdirectory(ui)
-# add_subdirectory(ultrasonic)
+add_subdirectory(ultrasonic)
 # add_subdirectory(wifi)
 
 # Add any additional targets or source files specific to this directory

@@ -3,6 +3,11 @@
 #include "hardware/gpio.h"
 #include "hardware/timer.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+
+#include "ultrasonic.h"
+
 int timeout = 26100;
 
 #define TRIGGER_PIN 0
@@ -39,7 +44,7 @@ uint64_t calculate_inch_distance(uint64_t pulse_length) {
     return (long)pulse_length / 74.f / 2.f;
 }
 
-int main() {
+void ultrasonic_task() {
     stdio_init_all();
 
     // Setup GPIO pins for trigger and echo
@@ -63,6 +68,4 @@ int main() {
         }
 
     }
-
-    return 0;
 }
