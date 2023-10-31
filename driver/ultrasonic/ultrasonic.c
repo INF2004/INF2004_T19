@@ -11,6 +11,7 @@ int timeout = 26100;
 // Function to measure the duration of the echo pulse
 uint64_t get_pulse_duration() {
 
+    gpio_put(TRIGGER_PIN, 0);   // Ensure the trigger pin is set to low first
     gpio_put(TRIGGER_PIN, 1);  // Set the trigger pin to high
     sleep_us(10);               // Generate a 10 microsecond pulse which is the minimum
     gpio_put(TRIGGER_PIN, 0);   // Set the trigger pin to low
@@ -21,22 +22,24 @@ uint64_t get_pulse_duration() {
     while (gpio_get(ECHO_PIN) == 0) tight_loop_contents();
     absolute_time_t start_time = get_absolute_time(); // Record the start time
 
-    // Wait for the falling edge of the echo pulse
+    // Wait for the falling edge of the echo pulsWe
     while (gpio_get(ECHO_PIN) == 1) {
         // Increment to measure the microsecond resolution
         width++;
         sleep_us(1);
-        if (width > timeout) return 0;
+        if (width > timeout) {
+            break;  // Break out of the loop if timeout happens
+        }
     }
     absolute_time_t end_time = get_absolute_time(); // Record the end time
 
     return absolute_time_diff_us(start_time, end_time); // Calculate the duration
 }
 
-// Convert pulse length to inches
-uint64_t calculate_inch_distance(uint64_t pulse_length) {
+// Convert pulse length to cm
+uint64_t calculate_cm_distance(uint64_t pulse_length) {
 
-    return (long)pulse_length / 74.f / 2.f;
+    return pulse_length / 29 / 2;
 }
 
 int main() {
@@ -51,11 +54,12 @@ int main() {
 
     while (1) {
         uint64_t pulse_length = get_pulse_duration();
-        uint64_t distance = calculate_inch_distance(pulse_length);
-        printf("Distance: %llu inch\n", distance);
+        uint64_t distance = calculate_cm_distance(pulse_length);
+        printf("Distance: %llu cm\n", distance);
         sleep_ms(1000);  // Delay between measurements
 
-        if (distance < 5) {
+        if (distance < 10) { // If the distance is more than 10 cm
+
 
             printf("Obstacle detected!\n");
             // Car to stop and move backwards
