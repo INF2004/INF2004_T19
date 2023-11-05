@@ -1,13 +1,24 @@
-add_executable(ultrasonic ultrasonic.c)
+# CMakeLists.txt in the ultrasonic directory
 
-# Pull in common dependencies
-target_link_libraries(ultrasonic pico_stdlib hardware_gpio hardware_timer)
+# Define the target for the ultrasonic component
+add_library(ultrasonic ultrasonic.c ultrasonic.h)
 
-# Create map/bin/hex file, etc.
-pico_add_extra_outputs(ultrasonic)
+target_compile_definitions(ultrasonic PRIVATE
+)
 
-# Enable USB output for printf
-pico_add_extra_outputs(ultrasonic)
 
-pico_enable_stdio_usb(ultrasonic 1)
-pico_enable_stdio_uart(ultrasonic 0)
+target_include_directories(ultrasonic PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}/../../ # for our FreeRTOSConfig.h
+    ${CMAKE_CURRENT_LIST_DIR}/../../../.. # for our common lwipopts
+)
+
+# Set any additional properties or dependencies for the ultrasonic component
+target_link_libraries(ultrasonic
+  PRIVATE
+    hardware_timer
+    hardware_gpio
+    pico_stdlib
+    m # math lib
+    FreeRTOS-Kernel-Heap4 # FreeRTOS kernel and dynamic heap
+)

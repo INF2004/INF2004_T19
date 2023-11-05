@@ -17,6 +17,8 @@ target_link_libraries(maze_sys
         FreeRTOS-Kernel-Heap4 # FreeRTOS kernel and dynamic heap
         UIComponent
         motor
+        encoder
+        ultrasonic
         magnetometer
 )
 pico_add_extra_outputs(maze_sys)
