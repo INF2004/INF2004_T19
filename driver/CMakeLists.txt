@@ -3,7 +3,7 @@
 # Set additional directory-specific settings here
 
 # Add the subdirectories for specific drivers/components
-# add_subdirectory(encoder)
+add_subdirectory(encoder)
 # add_subdirectory(irline)
 add_subdirectory(magnetometer)
 add_subdirectory(motor)
