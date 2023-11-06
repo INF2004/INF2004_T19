@@ -30,7 +30,7 @@ void encoder_task(__unused void *params) {
     // Wait forever
     while (true)
     {
-        printf("encoder thread:: \n");
+        // printf("encoder thread:: \n");
     }
 }
 
