@@ -18,7 +18,7 @@ target_link_libraries(maze_sys
         UIComponent
         motor
         encoder
-        ultrasonic
+        ultra
         magnetometer
 )
 pico_add_extra_outputs(maze_sys)

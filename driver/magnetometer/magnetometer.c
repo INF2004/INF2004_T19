@@ -26,14 +26,11 @@ void magnetometer_task(__unused void *params)
 
     while (true)
     {
-        accel_t accel = accelerometer_read();
+        // accel_t accel = accelerometer_read();
 
         float compass = compass_read_degrees();
 
-        // printf("accel x:: %d accel y:: %d accel z:: %d compass:: %.2f\n",
-        //     accel.raw_xa, accel.raw_ya, accel.raw_za, compass);
-
-        vTaskDelay(250);
+        printf("compass:: %.2f\n", compass);
     }
 }
 
@@ -140,42 +137,53 @@ float compass_read_degrees(void)
     uint8_t reg[1] = {0};
     uint8_t data[1] = {0};
 
+    uint8_t config[2];
+
+    uint8_t MAG_MR_REG_M = 0x02;
+    uint8_t SINGLE_SHOT_MODE = 0x01;
+    config[0] = MAG_MR_REG_M;
+    config[1] = SINGLE_SHOT_MODE;
+
+    // write to enable compass
+    i2c_write_blocking(I2C_PORT, MAG_ADDRESS, config, sizeof(config), true);
+    vTaskDelay(10);
+
     // Read 6 bytes of data
     // msb first
     // Read xMag msb data from register(0x03)
     reg[0] = 0x03;
-    i2c_write_blocking(I2C_PORT, MAG_ADDRESS, reg, sizeof(reg), true);
-    i2c_read_blocking(I2C_PORT, MAG_ADDRESS, data, sizeof(data), true);
+    i2c_write_blocking(I2C_PORT, MAG_ADDRESS, reg, sizeof(reg), false);
+    i2c_read_blocking(I2C_PORT, MAG_ADDRESS, data, sizeof(data), false);
     char data1_0 = data[0];
 
     // Read xMag lsb data from register(0x04)
     reg[0] = 0x04;
-    i2c_write_blocking(I2C_PORT, MAG_ADDRESS, reg, sizeof(reg), true);
-    i2c_read_blocking(I2C_PORT, MAG_ADDRESS, data, sizeof(data), true);
+    i2c_write_blocking(I2C_PORT, MAG_ADDRESS, reg, sizeof(reg), false);
+    i2c_read_blocking(I2C_PORT, MAG_ADDRESS, data, sizeof(data), false);
     char data1_1 = data[0];
 
     // Read yMag msb data from register(0x05)
     reg[0] = 0x07;
-    i2c_write_blocking(I2C_PORT, MAG_ADDRESS, reg, sizeof(reg), true);
-    i2c_read_blocking(I2C_PORT, MAG_ADDRESS, data, sizeof(data), true);
+    i2c_write_blocking(I2C_PORT, MAG_ADDRESS, reg, sizeof(reg), false);
+    i2c_read_blocking(I2C_PORT, MAG_ADDRESS, data, sizeof(data), false);
     char data1_2 = data[0];
 
     // Read yMag lsb data from register(0x06)
     reg[0] = 0x08;
-    i2c_write_blocking(I2C_PORT, MAG_ADDRESS, reg, sizeof(reg), true);
-    i2c_read_blocking(I2C_PORT, MAG_ADDRESS, data, sizeof(data), true);
+    i2c_write_blocking(I2C_PORT, MAG_ADDRESS, reg, sizeof(reg), false);
+    i2c_read_blocking(I2C_PORT, MAG_ADDRESS, data, sizeof(data), false);
     char data1_3 = data[0];
 
     // Read zMag msb data from register(0x07)
     reg[0] = 0x05;
-    i2c_write_blocking(I2C_PORT, MAG_ADDRESS, reg, sizeof(reg), true);
-    i2c_read_blocking(I2C_PORT, MAG_ADDRESS, data, sizeof(data), true);
+    i2c_write_blocking(I2C_PORT, MAG_ADDRESS, reg, sizeof(reg), false);
+    i2c_read_blocking(I2C_PORT, MAG_ADDRESS, data, sizeof(data), false);
     char data1_4 = data[0];
 
     // Read zMag lsb data from register(0x08)
     reg[0] = 0x06;
-    i2c_write_blocking(I2C_PORT, MAG_ADDRESS, reg, sizeof(reg), true);
-    i2c_read_blocking(I2C_PORT, MAG_ADDRESS, data, sizeof(data), true);
+    i2c_write_blocking(I2C_PORT, MAG_ADDRESS, reg, sizeof(reg), false);
+    i2c_read_blocking(I2C_PORT, MAG_ADDRESS, data, sizeof(data), false);
     char data1_5 = data[0];
 
     // Convert the data
@@ -196,7 +204,6 @@ float compass_read_degrees(void)
     {
         zMag -= 65536;
     }
-
 
     // Calculate the angle of the vector y,x
     float heading = (atan2(yMag, xMag) * 180.0) / PI;
