@@ -10,8 +10,8 @@
 
 int timeout = 26100;
 
-#define TRIGGER_PIN 0
-#define ECHO_PIN 1
+#define TRIGGER_PIN 16
+#define ECHO_PIN 17
 
 // Function to measure the duration of the echo pulse
 uint64_t get_pulse_duration() {
