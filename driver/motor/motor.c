@@ -1,10 +1,12 @@
 #include "pico/stdlib.h"
 #include "hardware/pwm.h"
+#include <stdio.h>
 
 #include "FreeRTOS.h"
 #include "task.h"
 
 #include "motor.h"
+#include "driver/ultrasonic/ultrasonic.h"
 
 #define CLOCK_DIVIDER 250
 #define PWM_WRAP 65535
@@ -19,34 +21,44 @@
 
 uint slice_num_left;
 uint slice_num_right;
+uint64_t pulse_len;
+uint64_t cm_distance;
 
 void motor_task(__unused void *params) 
 {
+    // stdio_init_all();
     motorSetup();
     while(1) {
-        moveForward();
-        vTaskDelay(2000);
+        // moveForward();
+        pulse_len = get_pulse_duration();
+        cm_distance = calculate_cm_distance(pulse_len);
+        // cm_distance = get_cm_distance(pulse_len);
+        // if (cm_distance <= 5)
+        // {
+        //     stopMotors();
+        // }
+        printf("cm: %llu from motor.c\n", cm_distance);
 
-        stopMotors();
-        vTaskDelay(2000);
+        // stopMotors();
+        // vTaskDelay(2000);
 
-        turnLeft();
-        vTaskDelay(2000);
+        // turnLeft();
+        // vTaskDelay(2000);
 
-        stopMotors();
-        vTaskDelay(2000);
+        // stopMotors();
+        // vTaskDelay(2000);
 
-        turnRight();
-        vTaskDelay(2000);
+        // turnRight();
+        // vTaskDelay(2000);
 
-        stopMotors();
-        vTaskDelay(2000);
+        // stopMotors();
+        // vTaskDelay(2000);
 
-        moveBackward();
-        vTaskDelay(2000);
+        // moveBackward();
+        // vTaskDelay(2000);
 
-        stopMotors();
-        vTaskDelay(2000);
+        // stopMotors();
+        // vTaskDelay(2000);
     }
 }
 
