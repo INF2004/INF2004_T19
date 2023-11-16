@@ -8,6 +8,10 @@
 #include "semphr.h"
 
 #include "ultrasonic.h"
+#include "driver/motor/motor.h"
+
+uint64_t pulse_length = 0;
+uint64_t distance = 0;
 
 #define TRIGGER_PIN 16
 #define ECHO_PIN 17
@@ -57,6 +61,10 @@ void ultrasonic_task(__unused void *params) {
     gpio_init(ECHO_PIN);
     gpio_set_dir(ECHO_PIN, GPIO_IN);
 
-    while (1) {  
+    while (1) {
+        pulse_length = get_pulse_duration();
+        distance = calculate_cm_distance(pulse_length);
+        ultrasonic_to_motor(distance);
+        printf("in ultrasonic task\n");
     }
 }

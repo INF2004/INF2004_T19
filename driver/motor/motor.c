@@ -1,9 +1,12 @@
+#include <stdio.h>
+
 #include "pico/stdlib.h"
 #include "hardware/pwm.h"
 #include <stdio.h>
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "queue.h"
 
 #include "motor.h"
 #include "driver/ultrasonic/ultrasonic.h"
@@ -21,13 +24,19 @@
 
 uint slice_num_left;
 uint slice_num_right;
+
+uint64_t ultrasonic_dist;
 uint64_t pulse_len;
 uint64_t cm_distance;
 
+static xQueueHandle ultra_to_motor_queue;
+
 void motor_task(__unused void *params) 
 {
-    // stdio_init_all();
+    ultra_to_motor_queue = xQueueCreate(10, sizeof(uint64_t));
+    stdio_init_all();
     motorSetup();
+
     while(1) {
         // moveForward();
         pulse_len = get_pulse_duration();
@@ -62,6 +71,15 @@ void motor_task(__unused void *params)
     }
 }
 
+void ultrasonic_to_motor(uint64_t distance)
+{
+    if (xQueueSend(ultra_to_motor_queue, &distance, pdMS_TO_TICKS(20)) == pdPASS)
+    {
+        xQueueReceive(ultra_to_motor_queue, &ultrasonic_dist, 0);
+        printf("distance from ultrasonic received from queue:: %llu\n", ultrasonic_dist);
+    }
+}
+
 void motorSetup(void) {
     gpio_init(MOTOR_CONTROL_N1);
     gpio_init(MOTOR_CONTROL_N2);
@@ -91,6 +109,7 @@ void motorSetup(void) {
 }
 
 void moveForward() {
+    // printf("moving forward::: \n");
     gpio_put(MOTOR_CONTROL_N1, 0);
     gpio_put(MOTOR_CONTROL_N2, 1);
     gpio_put(MOTOR_CONTROL_N3, 1);
