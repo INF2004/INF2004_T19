@@ -7,8 +7,11 @@
 #include "task.h"
 
 #include "ultrasonic.h"
+#include "driver/motor/motor.h"
 
 int timeout = 26100;
+uint64_t pulse_length = 0;
+uint64_t distance = 0;
 
 #define TRIGGER_PIN 16
 #define ECHO_PIN 17
@@ -58,18 +61,9 @@ void ultrasonic_task() {
     gpio_set_dir(ECHO_PIN, GPIO_IN);
 
     while (1) {
-        uint64_t pulse_length = get_pulse_duration();
-        uint64_t distance = calculate_cm_distance(pulse_length);
-        printf("Distance: %llu cm\n", distance);
-        sleep_ms(1000);  // Delay between measurements
-
-        if (distance < 10) { // If the distance is more than 10 cm
-
-
-            printf("Obstacle detected!\n");
-            // Car to stop and move backwards
-
-        }
-
+        pulse_length = get_pulse_duration();
+        distance = calculate_cm_distance(pulse_length);
+        ultrasonic_to_motor(distance);
+        printf("in ultrasonic task\n");
     }
 }

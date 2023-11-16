@@ -1,10 +1,14 @@
+#include <stdio.h>
+
 #include "pico/stdlib.h"
 #include "hardware/pwm.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "queue.h"
 
 #include "motor.h"
+#include "driver/ultrasonic/ultrasonic.h"
 
 #define CLOCK_DIVIDER 250
 #define PWM_WRAP 65535
@@ -19,10 +23,18 @@
 
 uint slice_num_left;
 uint slice_num_right;
+uint64_t ultrasonic_dist;
+
+static xQueueHandle ultra_to_motor_queue;
 
 void motor_task(__unused void *params) 
 {
+    ultra_to_motor_queue = xQueueCreate(10, sizeof(uint64_t));
+
+    stdio_init_all();
+
     motorSetup();
+
     while(1) {
         moveForward();
         vTaskDelay(2000);
@@ -47,6 +59,15 @@ void motor_task(__unused void *params)
 
         stopMotors();
         vTaskDelay(2000);
+    }
+}
+
+void ultrasonic_to_motor(uint64_t distance)
+{
+    if (xQueueSend(ultra_to_motor_queue, &distance, pdMS_TO_TICKS(20)) == pdPASS)
+    {
+        xQueueReceive(ultra_to_motor_queue, &ultrasonic_dist, 0);
+        printf("distance from ultrasonic received from queue:: %llu\n", ultrasonic_dist);
     }
 }
 
@@ -79,6 +100,7 @@ void motorSetup(void) {
 }
 
 void moveForward() {
+    // printf("moving forward::: \n");
     gpio_put(MOTOR_CONTROL_N1, 0);
     gpio_put(MOTOR_CONTROL_N2, 1);
     gpio_put(MOTOR_CONTROL_N3, 1);
