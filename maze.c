@@ -19,13 +19,14 @@
 
 void vLaunch(void) 
 {
-    TaskHandle_t uiTask;
+    // TaskHandle_t uiTask;
     TaskHandle_t magnetometerTask;
     TaskHandle_t motorTask;
     TaskHandle_t ultrasonicTask;
     TaskHandle_t encoderTask;
 
     // xTaskCreate(ui_task, "TestUiThread", configMINIMAL_STACK_SIZE, NULL, TEST_TASK_PRIORITY, &uiTask);
+    xTaskCreate(ultrasonic_task, "TestUltrasonicThread", configMINIMAL_STACK_SIZE, NULL, 9, &ultrasonicTask);
     xTaskCreate(motor_task, "TestMotorThread", configMINIMAL_STACK_SIZE, NULL, 9, &motorTask);
     xTaskCreate(magnetometer_task, "TestMagnetometerThread", configMINIMAL_STACK_SIZE, NULL, 8, &magnetometerTask);
     xTaskCreate(ultrasonic_task, "TestUltrasonicThread", configMINIMAL_STACK_SIZE, NULL, 9, &ultrasonicTask);
