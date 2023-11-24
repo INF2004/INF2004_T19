@@ -25,6 +25,17 @@ Same as the project proposal submitted with some minor changes, the respective t
 | Viewable user interface (User interface) -	The app to operate the robot  | <b>Everyone</b> |
 | Integration of all the components  | <b>Everyone</b> |
 
+# <h3>Steps to run this code</h3>
+1. GIT BASH into directory: Pico-v1.5.1\pico-examples\pico_w\wifi\freertos
+2. In Freertos, GIT CLONE this project into the directory.
+3. Using Pico-Visual Studio code, open up the pico-examples folder.
+4. Navigate to the freertos section.
+5. Project folder should appear there.
+--- TO RUN THE PROJECT ---
+6. Inside CMAKE build, navigate to the same freertos location where project folder is stored.
+7. There should be a file named maze_sys.uf2.
+8. Drag and drop the file into the pico and wait for it to run.
+
 # <h3>FLOW DIAGRAM</h3>
 ![Embedded system flow diagram drawio](https://github.com/INF2004/INF2004_T19/assets/41094581/4cae9e96-27df-4d12-b9a0-05ad7d947393)
 
@@ -32,5 +43,6 @@ Same as the project proposal submitted with some minor changes, the respective t
 ![block drawio](https://github.com/INF2004/INF2004_T19/assets/41094581/9cdb7adb-d2f1-46f9-a452-977afab86123)
 
 # <h3>FLOW DIAGRAM</h3>
+![Untitled Diagram drawio](https://github.com/INF2004/INF2004_T19/assets/41094581/beb821e3-6135-49d9-a012-74117ce53412)
 
 
