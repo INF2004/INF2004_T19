@@ -31,10 +31,12 @@ Same as the project proposal submitted with some minor changes, the respective t
 3. Using Pico-Visual Studio code, open up the pico-examples folder.
 4. Navigate to the freertos section.
 5. Project folder should appear there.
+   
 --- TO RUN THE PROJECT ---
-6. Inside CMAKE build, navigate to the same freertos location where project folder is stored.
-7. There should be a file named maze_sys.uf2.
-8. Drag and drop the file into the pico and wait for it to run.
+
+7. Inside CMAKE build, navigate to the same freertos location where project folder is stored.
+8. There should be a file named maze_sys.uf2.
+9. Drag and drop the file into the pico and wait for it to run.
 
 # <h3>FLOW DIAGRAM</h3>
 ![Embedded system flow diagram drawio](https://github.com/INF2004/INF2004_T19/assets/41094581/4cae9e96-27df-4d12-b9a0-05ad7d947393)
