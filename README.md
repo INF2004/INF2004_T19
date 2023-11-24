@@ -13,11 +13,12 @@ SIT INF2004 (Embedded Systems): C Program for a robot car with the following com
 
 # Workload distribution for the team
 
-Same as the project proposal submitted, the respective team members split the work equally and did the following:
+Same as the project proposal submitted with some minor changes, the respective team members split the work equally and did the following:
 
-| First Header  | Second Header |
+| Working directory  | Done By |
 | ------------- | ------------- |
-| Content Cell  | Content Cell  |
+| Ultrasonic sensor (Distance measurement)
+-	Calculate distance based on time taken for sound waves to bounce back after hitting an object  | Amanda  |
 | Content Cell  | Content Cell  |
 
 # <h3>FLOW DIAGRAM</h3>
