@@ -14,7 +14,8 @@ SIT INF2004 (Embedded Systems): C Program for a robot car with the following com
 # Workload distribution for the team
 
 Same as the project proposal submitted, the respective team members split the work equally and did the following:
-| Working directory |
+
+| First Header  | Second Header |
 | ------------- | ------------- |
 | Content Cell  | Content Cell  |
 | Content Cell  | Content Cell  |
