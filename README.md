@@ -1,6 +1,11 @@
 # INF2004_T19
 
-SIT INF2004 (Embedded Systems) program for a C language robotic car
-
-What this code can do currently, to be updated as time goes:
-- Motor: Able to move forward, left, right and stop. However, speed control (PID) based on wheel notches is currently under progress.
+SIT INF2004 (Embedded Systems): C Program for a robot car with the following components:
+- RP 2040 Pico W
+- Magnetomer
+- Motor
+- L298 Motor controller
+- Ir Sensor
+- Ultrasonic Sensor
+- Barcode detection and decode
+- Encoders (PID Speed regulator for both wheels to turn at the same time)
