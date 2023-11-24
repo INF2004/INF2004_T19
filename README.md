@@ -11,6 +11,6 @@ SIT INF2004 (Embedded Systems): C Program for a robot car with the following com
 - 2 wheels
 - 2 Encoders (1 for each wheel, PID Speed regulator for both wheels to turn at the same time)
 
-# <h2>FLOW DIAGRAM</h2>
+# <h3>FLOW DIAGRAM</h3>
 ![Embedded system flow diagram drawio](https://github.com/INF2004/INF2004_T19/assets/41094581/4cae9e96-27df-4d12-b9a0-05ad7d947393)
 
