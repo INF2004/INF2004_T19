@@ -29,4 +29,8 @@ Same as the project proposal submitted with some minor changes, the respective t
 ![Embedded system flow diagram drawio](https://github.com/INF2004/INF2004_T19/assets/41094581/4cae9e96-27df-4d12-b9a0-05ad7d947393)
 
 # <h3>BLOCK DIAGRAM</h3>
+![block drawio](https://github.com/INF2004/INF2004_T19/assets/41094581/9cdb7adb-d2f1-46f9-a452-977afab86123)
+
+# <h3>FLOW DIAGRAM</h3>
+
 
