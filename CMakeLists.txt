@@ -5,6 +5,7 @@ add_subdirectory(driver)
 
 add_executable(maze_sys
         maze.c
+        maze.h
 )
 target_compile_definitions(maze_sys PRIVATE
 )
@@ -19,6 +20,7 @@ target_link_libraries(maze_sys
         motor
         encoder
         ultra
+        ir
         magnetometer
 )
 pico_add_extra_outputs(maze_sys)
