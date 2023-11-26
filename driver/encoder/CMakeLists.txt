@@ -16,7 +16,9 @@ target_include_directories(encoder PRIVATE
 target_link_libraries(encoder
   PRIVATE
     pico_stdlib
+    hardware_timer
     hardware_gpio
     pico_time
+    m
     FreeRTOS-Kernel-Heap4 # FreeRTOS kernel and dynamic heap
 )

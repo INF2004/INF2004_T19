@@ -5,6 +5,7 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "message_buffer.h"
 
 #include "magnetometer.h"
 
@@ -18,6 +19,8 @@
 uint8_t ACCEL_ADDRESS = 0x19; // 0011001b
 uint8_t MAG_ADDRESS = 0x1E;   // 0011110b
 
+extern MessageBufferHandle_t magnetometer_to_motor_msg_buff;
+
 void magnetometer_task(__unused void *params)
 {
     magnetometer_init();
@@ -30,7 +33,14 @@ void magnetometer_task(__unused void *params)
 
         float compass = compass_read_degrees();
 
-        printf("compass:: %.2f\n", compass);
+        xMessageBufferSend(
+            magnetometer_to_motor_msg_buff, // The message buffer to write to
+            (void *)&compass,    // The source of data to send
+            sizeof(compass),     // The length of the data to send
+            0                    // The block time; 0 = no block
+        );
+
+        vTaskDelay(pdMS_TO_TICKS(20));
     }
 }
 
@@ -96,7 +106,7 @@ accel_t accelerometer_read(void)
     raw_ya = (int16_t)(yla | (yha << 8)) >> 4;
     raw_za = (int16_t)(zla | (zha << 8)) >> 4;
 
-    printf("raw_xa:: %d, raw_ya:: %d, raw_za:: %d\n", raw_xa, raw_ya, raw_za);
+    // printf("raw_xa:: %d, raw_ya:: %d, raw_za:: %d\n", raw_xa, raw_ya, raw_za);
 
     accel_t data = {
         .raw_xa = raw_xa,

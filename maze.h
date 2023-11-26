@@ -1,0 +1,8 @@
+#include "message_buffer.h"
+
+MessageBufferHandle_t ultrasonic_to_motor_msg_buff;
+MessageBufferHandle_t left_encoder_to_motor_msg_buff;
+MessageBufferHandle_t right_encoder_to_motor_msg_buff;
+MessageBufferHandle_t magnetometer_to_motor_msg_buff;
+MessageBufferHandle_t left_ir_to_motor_msg_buff;
+MessageBufferHandle_t right_ir_to_motor_msg_buff;
