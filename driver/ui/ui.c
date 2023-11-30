@@ -136,7 +136,7 @@ void ui_task(__unused void *params)
 
     while (true)
     {
-        // vTaskDelay(1000);
+        vTaskDelay(pdMS_TO_TICKS(20));
     }
 
     cyw43_arch_deinit();

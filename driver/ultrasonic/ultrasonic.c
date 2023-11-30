@@ -1,10 +1,13 @@
 #include <stdio.h>
+
 #include "pico/stdlib.h"
 #include "hardware/gpio.h"
 #include "hardware/timer.h"
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "message_buffer.h"
+
 #include "ultrasonic.h"
 
 #define mbaTASK_MESSAGE_BUFFER_SIZE 60
@@ -78,6 +81,6 @@ void ultrasonic_task(__unused void *params)
             sizeof(distance),  // The length of the data to send
             0                             // The block time; 0 = no block
         );
-        // vTaskDelay(pdMS_TO_TICKS(20));
+        vTaskDelay(pdMS_TO_TICKS(20));
     }
 }

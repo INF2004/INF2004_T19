@@ -16,6 +16,7 @@ target_include_directories(motor PRIVATE
 target_link_libraries(motor
   PRIVATE
     hardware_pwm
+    hardware_adc
     pico_stdlib
     FreeRTOS-Kernel-Heap4 # FreeRTOS kernel and dynamic heap
 )
