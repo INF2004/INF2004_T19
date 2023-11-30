@@ -33,8 +33,8 @@ void encoder_isr(uint gpio, uint32_t events)
     }
 }
 
-// speed is calculated in notches per sec
-// this method will callback every second, sending both left and right
+// speed is calculated in notches per 100 milliseconds
+// this method will callback every 100ms, sending both left and right
 // speeds
 
 bool calculate_speed_callback(struct repeating_timer *t)

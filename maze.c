@@ -24,12 +24,10 @@ void vLaunch(void)
     ultrasonic_to_motor_msg_buff = xMessageBufferCreate(mbaTASK_MESSAGE_BUFFER_SIZE);
     left_encoder_to_motor_msg_buff = xMessageBufferCreate(mbaTASK_MESSAGE_BUFFER_SIZE);
     right_encoder_to_motor_msg_buff = xMessageBufferCreate(mbaTASK_MESSAGE_BUFFER_SIZE);
-    // magnetometer_to_motor_msg_buff = xMessageBufferCreate(mbaTASK_MESSAGE_BUFFER_SIZE);
-    left_ir_to_motor_msg_buff = xMessageBufferCreate(mbaTASK_MESSAGE_BUFFER_SIZE);
-    right_ir_to_motor_msg_buff = xMessageBufferCreate(mbaTASK_MESSAGE_BUFFER_SIZE);
+    magnetometer_to_motor_msg_buff = xMessageBufferCreate(mbaTASK_MESSAGE_BUFFER_SIZE);
 
     // TaskHandle_t uiTask;
-    // TaskHandle_t magnetometerTask;
+    TaskHandle_t magnetometerTask;
     TaskHandle_t motorTask;
     TaskHandle_t ultrasonicTask;
     TaskHandle_t encoderTask;
@@ -38,9 +36,9 @@ void vLaunch(void)
     xTaskCreate(motor_task, "TestMotorThread", 4096, NULL, TEST_TASK_PRIORITY, &motorTask);
     // xTaskCreate(ui_task, "TestUiThread", configMINIMAL_STACK_SIZE, NULL, TEST_TASK_PRIORITY, &uiTask);
     xTaskCreate(ultrasonic_task, "TestUltrasonicThread", configMINIMAL_STACK_SIZE, NULL, TEST_TASK_PRIORITY, &ultrasonicTask);
-    // xTaskCreate(magnetometer_task, "TestMagnetometerThread", configMINIMAL_STACK_SIZE, NULL, TEST_TASK_PRIORITY, &magnetometerTask);
+    xTaskCreate(magnetometer_task, "TestMagnetometerThread", configMINIMAL_STACK_SIZE, NULL, TEST_TASK_PRIORITY, &magnetometerTask);
     xTaskCreate(encoder_task, "TestEncoderThread", configMINIMAL_STACK_SIZE, NULL, TEST_TASK_PRIORITY, &encoderTask);
-    xTaskCreate(ir_task, "TestIRThread", configMINIMAL_STACK_SIZE, NULL, TEST_TASK_PRIORITY , &irTask);
+    xTaskCreate(ir_task, "TestIRThread", configMINIMAL_STACK_SIZE, NULL, TEST_TASK_PRIORITY, &irTask);
 
 #if NO_SYS && configUSE_CORE_AFFINITY && configNUM_CORES > 1
     // we must bind the main task to one core (well at least while the init is called)

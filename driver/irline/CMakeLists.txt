@@ -17,5 +17,6 @@ target_link_libraries(ir
   PRIVATE
     hardware_pwm
     pico_stdlib
+    hardware_adc
     FreeRTOS-Kernel-Heap4 # FreeRTOS kernel and dynamic heap
 )
